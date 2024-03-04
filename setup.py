@@ -16,6 +16,7 @@ from setuptools.extension import Extension
 try:
     import cython
 except ImportError:
+    cython = None
     _HAVE_CYTHON = False
 else:
     _HAVE_CYTHON = True
@@ -24,11 +25,12 @@ else:
 
 pkg_name = 'pykinsol'
 url = 'https://github.com/bjodah/' + pkg_name
-license = 'BSD'
+license_name = 'BSD'
 
 
 def _path_under_setup(*args):
     return os.path.join(*args)
+
 
 release_py_path = _path_under_setup(pkg_name, '_release.py')
 config_py_path = _path_under_setup(pkg_name, '_config.py')
@@ -147,7 +149,7 @@ tests = [
 with io.open(_path_under_setup(pkg_name, '__init__.py'), 'rt', encoding='utf-8') as f:
     short_description = f.read().split('"""')[1].split('\n')[1]
 if not 10 < len(short_description) < 255:
-    warnings.warn("Short description from __init__.py proably not read correctly.")
+    warnings.warn("Short description from __init__.py probably not read correctly.")
 long_description = io.open(_path_under_setup('README.rst'),
                            encoding='utf-8').read()
 if not len(long_description) > 100:
@@ -163,7 +165,7 @@ setup_kwargs = dict(
     author=_author.strip(),
     author_email=_author_email.split('>')[0].strip(),
     url=url,
-    license=license,
+    license=license_name,
     packages=[pkg_name] + tests,
     include_package_data=True,
     install_requires=['numpy'] + (['cython'] if USE_CYTHON else []),

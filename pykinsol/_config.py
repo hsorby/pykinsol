@@ -2,7 +2,6 @@
 import logging
 import os
 import pickle
-import shutil
 import sys
 import tempfile
 import warnings
@@ -23,18 +22,7 @@ if 'pytest' not in sys.modules:
     except ImportError:
         pass
 
-if sys.version_info[0] == 2:
-    class TemporaryDirectory(object):
-        def __init__(self):
-            self.path = tempfile.mkdtemp()
-
-        def __enter__(self):
-            return self.path
-
-        def __exit__(self, exc, value, tb):
-            shutil.rmtree(self.path)
-else:
-    TemporaryDirectory = tempfile.TemporaryDirectory
+TemporaryDirectory = tempfile.TemporaryDirectory
 
 
 def _warn(msg):
@@ -50,8 +38,8 @@ def _compiles_ok(codestring):
     from distutils.errors import CompileError
     with TemporaryDirectory() as folder:
         source_path = os.path.join(folder, 'compiler_test_source.cpp')
-        with open(source_path, 'wt') as ofh:
-            ofh.write(codestring)
+        with open(source_path, 'wt') as file_handle:
+            file_handle.write(codestring)
         compiler = new_compiler()
         customize_compiler(compiler)
         out = ''
@@ -99,6 +87,7 @@ def _get_sun_index_type():
     # sunindextype simply not defined in older versions
     # default to int32_t
     return "int32_t"
+
 
 logger = logging.getLogger(__name__)
 
@@ -182,6 +171,7 @@ def _attempt_compilation():
         logger.info("KLU either not enabled for sundials or not in include path:\n%s" % _klu_out)
     return locals()
 
+
 env = None
 if appdirs:
     if '__version__' not in locals():  # it will be when exec'd from setup.py
@@ -218,6 +208,7 @@ def _make_dirs(path):
         os.mkdir(path, 0o777)
     else:
         assert os.path.isdir(path)
+
 
 if env is None:
     _r = _attempt_compilation()
