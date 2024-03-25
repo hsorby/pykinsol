@@ -50,7 +50,7 @@ else:  # set `__version__` from _release.py:
     if __version__.endswith('git'):
         try:
             _git_version = subprocess.check_output(
-                ['git', 'describe', '--dirty']).rstrip().decode('utf-8').replace('-dirty', '+dirty')
+                ['git', 'describe', '--dirty']).rstrip().decode('utf-8').replace('-dirty', '.dirty')
         except subprocess.CalledProcessError:
             warnings.warn("A git-archive is being installed - version information incomplete.")
         else:
